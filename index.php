@@ -18,7 +18,7 @@ if ($mysqli->connect_errno) {
 }
 
 # pick a random event
-$res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
+#$res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
 
 # pick an event with a link
 #$res = $mysqli->query("SELECT * FROM Concerts WHERE link is not null ORDER BY rand() LIMIT 1");
@@ -30,15 +30,22 @@ $res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
 #$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null AND link is not null ORDER BY rand() LIMIT 1");
 
 # pick an event that happened this month
-#$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $TODAY->format('m') . " ORDER BY rand() LIMIT 1");
+$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $TODAY->format('m') . " ORDER BY rand() LIMIT 1");
 
 # pick an event that has an image
-$res = $mysqli->query("SELECT * FROM Concerts WHERE image is not null ORDER BY rand() LIMIT 1");
+#$res = $mysqli->query("SELECT * FROM Concerts WHERE image is not null ORDER BY rand() LIMIT 1");
 
 $row = $res->fetch_assoc();
 
 $interval = date_diff($TODAY, new DateTime($row['date'], new DateTimeZone('America/Toronto')));
-$tweet_start = $interval->format('%y') . " years ago, " . $row['headliner'];
+$years_ago = $interval->format('%y') + 1;
+if ($years_ago == 1) {
+  $years_ago_text = "This month last year ";
+} else {
+  $years_ago_text = "$years_ago years ago this month, ";
+}
+
+$tweet_start = $years_ago_text . $row['headliner'];
 $tweet_end = " played " . $row['venue_name'];
 $tweet = $tweet_start . $tweet_end;
 
