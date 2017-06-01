@@ -3,13 +3,13 @@
 use Codebird\Codebird;
 
 require "vendor/autoload.php";
+require_once "config.php";
 
 
 $cb = new Codebird;
 
-$cb->setConsumerKey('9rBfImzouVF8xtcCHI8PzaFCS','sCz49oRrMEiRkH9bmZnLyfcSKIIJRIRT96hUszQGfHcuuf1WAp');
-$cb->setToken('870278599575822336-CRiLb10qDaibDCLdu9dOIhVtCPYkCMd', '4tJLA9kjZFVybHW3pL4Edrg4Z3vo0ldzPkSJL1W11JVsQ');
-
+$cb->setConsumerKey($twitterConfig['ConsumerKey'], $twitterConfig['ConsumerSecret'] );
+$cb->setToken($twitterConfig['AccessToken'], $twitterConfig['AccessTokenSecret'] );
 
 // these files to upload. You can also just upload 1 image!
 $media_files = [
