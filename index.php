@@ -1,16 +1,57 @@
 <?php
 
 use Codebird\Codebird;
-
 require "vendor/autoload.php";
+
+$TWEET_MAX_CHARS = 144;
+$SHORTENED_URL_CHARS = 27; # Twitter shortens all URLs in a tweet to this length
+$TODAY = new DateTime("now", new DateTimeZone('America/Toronto'));
 
 
 $cb = new Codebird;
-
 $cb->setConsumerKey('9rBfImzouVF8xtcCHI8PzaFCS','sCz49oRrMEiRkH9bmZnLyfcSKIIJRIRT96hUszQGfHcuuf1WAp');
 $cb->setToken('870278599575822336-CRiLb10qDaibDCLdu9dOIhVtCPYkCMd', '4tJLA9kjZFVybHW3pL4Edrg4Z3vo0ldzPkSJL1W11JVsQ');
 
+$mysqli = new mysqli("127.0.0.1", "root", "", "888yongeandold");
+if ($mysqli->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}
 
+# pick a random event
+$res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
+
+# pick an event with a link
+#$res = $mysqli->query("SELECT * FROM Concerts WHERE link is not null ORDER BY rand() LIMIT 1");
+
+# pick an event with openers
+#$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null ORDER BY rand() LIMIT 1");
+
+# pick an event with openers and a link
+#$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null AND link is not null ORDER BY rand() LIMIT 1");
+
+# pick an event that happened this month
+#$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $TODAY->format('m') . " ORDER BY rand() LIMIT 1");
+
+$row = $res->fetch_assoc();
+
+$interval = date_diff($TODAY, new DateTime($row['date'], new DateTimeZone('America/Toronto')));
+$tweet_start = $interval->format('%y') . " years ago, " . $row['headliner'];
+$tweet_end = " played " . $row['venue_name'];
+$tweet = $tweet_start . $tweet_end;
+
+if ((strlen($tweet) < ($TWEET_MAX_CHARS - $SHORTENED_URL_CHARS - 1)) && ($row['link'])) {
+  $tweet_end .= " " . $row['link'];
+  $tweet = $tweet_start . $tweet_end;
+}
+
+if ($row['openers']) {
+  $openers = " (with " . $row['openers'] . ")";
+  if ((strlen($tweet) + strlen($openers)) < $TWEET_MAX_CHARS) {
+    $tweet = $tweet_start . $openers . $tweet_end;
+  }
+}
+
+/*
 // these files to upload. You can also just upload 1 image!
 $media_files = [
   'imgs/quad.jpg'
@@ -30,13 +71,19 @@ foreach ($media_files as $file) {
 // convert media ids to string list
 $media_ids = implode(',', $media_ids);
 
-
 $reply = $cb->statuses_update([
 	'status'=> 'My first quadcopter 888'.time(),
 	'media_ids' => $media_ids
 ]);
+*/
+
+$reply = $cb->statuses_update([
+	'status'=> $tweet
+]);
 
 // display response
+/*
 echo "<pre>";
 print_r($reply);
 echo "</pre>";
+*/
