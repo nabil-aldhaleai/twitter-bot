@@ -1,65 +1,18 @@
 <?php
 
 use Codebird\Codebird;
+
 require "vendor/autoload.php";
 require_once "config.php";
-
-$TWEET_MAX_CHARS = 144;
-$SHORTENED_URL_CHARS = 27; # Twitter shortens all URLs in a tweet to this length
-$TODAY = new DateTime("now", new DateTimeZone('America/Toronto'));
+require_once 'twitterModel.php';
+require_once 'formatTweet.php';
 
 $cb = new Codebird;
 $cb->setConsumerKey($twitterConfig['ConsumerKey'], $twitterConfig['ConsumerSecret'] );
 $cb->setToken($twitterConfig['AccessToken'], $twitterConfig['AccessTokenSecret'] );
 
-$mysqli = new mysqli("127.0.0.1", "root", "", "888yongeandold");
-if ($mysqli->connect_errno) {
-    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-}
-
-# pick a random event
-#$res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
-
-# pick an event with a link
-#$res = $mysqli->query("SELECT * FROM Concerts WHERE link is not null ORDER BY rand() LIMIT 1");
-
-# pick an event with openers
-#$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null ORDER BY rand() LIMIT 1");
-
-# pick an event with openers and a link
-#$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null AND link is not null ORDER BY rand() LIMIT 1");
-
-# pick an event that happened this month
-$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $TODAY->format('m') . " ORDER BY rand() LIMIT 1");
-
-# pick an event that has an image
-#$res = $mysqli->query("SELECT * FROM Concerts WHERE image is not null ORDER BY rand() LIMIT 1");
-
-$row = $res->fetch_assoc();
-
-$interval = date_diff($TODAY, new DateTime($row['date'], new DateTimeZone('America/Toronto')));
-$years_ago = $interval->format('%y') + 1;
-if ($years_ago == 1) {
-  $years_ago_text = "This month last year ";
-} else {
-  $years_ago_text = "$years_ago years ago this month, ";
-}
-
-$tweet_start = $years_ago_text . $row['headliner'];
-$tweet_end = " played " . $row['venue_name'];
-$tweet = $tweet_start . $tweet_end;
-
-if ((strlen($tweet) < ($TWEET_MAX_CHARS - $SHORTENED_URL_CHARS - 1)) && ($row['link'])) {
-  $tweet_end .= " " . $row['link'];
-  $tweet = $tweet_start . $tweet_end;
-}
-
-if ($row['openers']) {
-  $openers = " (with " . $row['openers'] . ")";
-  if ((strlen($tweet) + strlen($openers)) < $TWEET_MAX_CHARS) {
-    $tweet = $tweet_start . $openers . $tweet_end;
-  }
-}
+$row = getRecord();
+$tweetText = formatTweet($row);
 
 /*
 // these files to upload. You can also just upload 1 image!
@@ -94,12 +47,12 @@ if ($row['image']) {
   $media_ids[] = $reply->media_id_string;
 
   $reply = $cb->statuses_update([
-  	'status'=> $tweet,
+  	'status'=> $tweetText,
   	'media_ids' => implode(',', $media_ids)
   ]);
 } else {
   $reply = $cb->statuses_update([
-  	'status'=> $tweet
+  	'status'=> $tweetText
   ]);
 }
 
