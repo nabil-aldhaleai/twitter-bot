@@ -32,6 +32,9 @@ $res = $mysqli->query("SELECT * FROM Concerts ORDER BY rand() LIMIT 1");
 # pick an event that happened this month
 #$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $TODAY->format('m') . " ORDER BY rand() LIMIT 1");
 
+# pick an event that has an image
+$res = $mysqli->query("SELECT * FROM Concerts WHERE image is not null ORDER BY rand() LIMIT 1");
+
 $row = $res->fetch_assoc();
 
 $interval = date_diff($TODAY, new DateTime($row['date'], new DateTimeZone('America/Toronto')));
@@ -77,9 +80,21 @@ $reply = $cb->statuses_update([
 ]);
 */
 
-$reply = $cb->statuses_update([
-	'status'=> $tweet
-]);
+if ($row['image']) {
+  $reply = $cb->media_upload(array(
+    'media' => $row['image']
+  ));
+  $media_ids[] = $reply->media_id_string;
+
+  $reply = $cb->statuses_update([
+  	'status'=> $tweet,
+  	'media_ids' => implode(',', $media_ids)
+  ]);
+} else {
+  $reply = $cb->statuses_update([
+  	'status'=> $tweet
+  ]);
+}
 
 // display response
 /*
