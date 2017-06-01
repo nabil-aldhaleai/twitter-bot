@@ -2,15 +2,15 @@
 
 use Codebird\Codebird;
 require "vendor/autoload.php";
+require_once "config.php";
 
 $TWEET_MAX_CHARS = 144;
 $SHORTENED_URL_CHARS = 27; # Twitter shortens all URLs in a tweet to this length
 $TODAY = new DateTime("now", new DateTimeZone('America/Toronto'));
 
-
 $cb = new Codebird;
-$cb->setConsumerKey('9rBfImzouVF8xtcCHI8PzaFCS','sCz49oRrMEiRkH9bmZnLyfcSKIIJRIRT96hUszQGfHcuuf1WAp');
-$cb->setToken('870278599575822336-CRiLb10qDaibDCLdu9dOIhVtCPYkCMd', '4tJLA9kjZFVybHW3pL4Edrg4Z3vo0ldzPkSJL1W11JVsQ');
+$cb->setConsumerKey($twitterConfig['ConsumerKey'], $twitterConfig['ConsumerSecret'] );
+$cb->setToken($twitterConfig['AccessToken'], $twitterConfig['AccessTokenSecret'] );
 
 $mysqli = new mysqli("127.0.0.1", "root", "", "888yongeandold");
 if ($mysqli->connect_errno) {
