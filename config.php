@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 
   $twitterConfig = [
@@ -7,3 +7,4 @@
     'AccessToken'        => '870278599575822336-CRiLb10qDaibDCLdu9dOIhVtCPYkCMd',
     'AccessTokenSecret' => '4tJLA9kjZFVybHW3pL4Edrg4Z3vo0ldzPkSJL1W11JVsQ'
   ];
+?>
