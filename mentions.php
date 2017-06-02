@@ -18,6 +18,31 @@ $mentions = $cb->statuses_mentionsTimeline(isset($lastSinceId->mention_id) ? 'si
 if (isset($mentions)){
   foreach($mentions as $mention){
   if (isset($mention['text']) && !empty($mention['text'])){
+
+    $ans ='';
+    $str = trim(str_replace('@888yongeandold', '' ,$mention['text']));
+    // echo $str;
+    // $str = "I am hot?";
+    // $str = "address?";
+    // $str = "happy?";
+    switch ($str) {
+    case "?history":
+        $ans =  "Masonic Temple Construction began November 2, 1916, when the contract was signed and approved by the Board of The Masonic Temple Company for the tearing down of an existing church and excavation.";
+        break;
+    case "?address":
+        $ans = "we are located at:\n 888 Yonge Street \n 	Toronto, Ontario, Canada ";
+        break;
+    case "?happy":
+        $ans = "wooohooo  ".html_entity_decode('&#x1F601;', 0, 'UTF-8');
+        break;
+}
+
+
+
+
+
+
+
   // if (isset($mention['id']) && $mention['id']=="870439097780903937"){
   // if (isset($mention['text']) ){
     // $str = trim(str_replace('@888yongeandold', '' ,$mention['text']));
@@ -42,13 +67,13 @@ if (isset($mentions)){
   //       echo "</pre>";
   //     }
 
-    $cb->statuses_update([
-      'status'=> '@'. $mention['user']['screen_name'].' '."This is an automated response.",
-      'in_reply_to_status_id' => $mention['id']
-    ]);
+      $cb->statuses_update([
+        'status'=> '@'. $mention['user']['screen_name'].' '.$ans,
+        'in_reply_to_status_id' => $mention['id']
+      ]);
 
-    $query = $db->prepare( 'INSERT INTO mentions (mention_id) VALUES (:mentionId)' );
-    $query->execute(['mentionId' => $mention['id']]);
+      $query = $db->prepare( 'INSERT INTO mentions (mention_id) VALUES (:mentionId)' );
+      $query->execute(['mentionId' => $mention['id']]);
 
 
     }
@@ -66,7 +91,7 @@ function keyWordsSearch($keyword){
 
   $res = $mysqli->query("SELECT * from Concerts WHERE headliner LIKE '%$keyword' ORDER BY date DESC limit 1");
   $row = $res->fetch_assoc();
-  
+
   return $row;
 
 }
