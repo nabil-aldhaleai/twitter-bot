@@ -21,8 +21,11 @@
     #$res = $mysqli->query("SELECT * FROM Concerts WHERE openers is not null AND link is not null ORDER BY rand() LIMIT 1");
 
     # pick an event that happened this month
-    $today = new DateTime("now", new DateTimeZone('America/Toronto'));
-    $res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $today->format('m') . " ORDER BY rand() LIMIT 1");
+    #$today = new DateTime("now", new DateTimeZone('America/Toronto'));
+    #$res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = " . $today->format('m') . " ORDER BY rand() LIMIT 1");
+
+    # pick an event that happened in an arbritary month
+    $res = $mysqli->query("SELECT * FROM Concerts WHERE month(date) = 11 ORDER BY rand() LIMIT 1");
 
     # pick an event that has an image
     #$res = $mysqli->query("SELECT * FROM Concerts WHERE image is not null ORDER BY rand() LIMIT 1");
