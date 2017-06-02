@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.36)
 # Database: 888yongeandold
-# Generation Time: 2017-06-01 18:41:21 +0000
+# Generation Time: 2017-06-02 00:27:56 +0000
 # ************************************************************
 
 
@@ -51,7 +51,6 @@ VALUES
 	(7,'1969-02-02','Led Zeppelin',NULL,NULL,NULL,'http://www.ledzeppelin.com/node/333/9895','The Rock Pile'),
 	(8,'1968-10-27','The Jeff Beck Group',NULL,NULL,NULL,NULL,'The Rock Pile'),
 	(9,'1998-06-27','Cibo Matto',NULL,NULL,NULL,NULL,'The Concert Hall'),
-	(10,'1997-12-27','Rakim',NULL,NULL,NULL,NULL,'The Concert Hall'),
 	(11,'1968-11-09','Iron Butterfly',NULL,NULL,NULL,NULL,'The Rock Pile'),
 	(12,'1969-03-02','John Mayall',NULL,NULL,NULL,NULL,'The Rock Pile'),
 	(13,'1969-03-08','Savoy Brown Blues Band',NULL,NULL,NULL,NULL,'The Rock Pile'),
@@ -114,7 +113,9 @@ VALUES
 	(70,'1994-04-06','Phish',NULL,NULL,NULL,'http://www.songkick.com/concerts/1814606-phish-at-concert-hall','The Concert Hall'),
 	(71,'1992-02-18','Ice-T and his Rhyme $yndicate','Body Count and Hard Corps','https://instagram.fymy1-1.fna.fbcdn.net/t51.2885-15/e35/18723503_1314853008628833_797301953414561792_n.jpg',NULL,'https://www.instagram.com/p/BUsLm8MB874/','The Concert Hall'),
 	(72,'1990-05-19','Queen Latifah','Chill Rob G. and HDV',NULL,NULL,'https://www.instagram.com/p/4FPIdNJra7/','The Concert Hall'),
-	(73,'1992-05-04','Soundgarden','Swervedriver and Monster Magnet',NULL,NULL,'https://www.instagram.com/p/BUPX4UABnk5/','The Concert Hall');
+	(73,'1992-05-04','Soundgarden','Swervedriver and Monster Magnet',NULL,NULL,'https://www.instagram.com/p/BUPX4UABnk5/','The Concert Hall'),
+	(74,'2006-04-18','Kanye West and Sam Roberts',NULL,'http://media.gettyimages.com/photos/kanye-west-during-mtv-live-at-the-concert-hall-featuring-kanye-west-picture-id107309788',NULL,NULL,'MTV Live At The Concert Hall'),
+	(75,'1997-12-27','Rakim',NULL,NULL,NULL,'https://www.instagram.com/p/BUIZCz_hEar/','The Concert Hall');
 
 /*!40000 ALTER TABLE `Concerts` ENABLE KEYS */;
 UNLOCK TABLES;
